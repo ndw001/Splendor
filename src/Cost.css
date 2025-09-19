@@ -1,0 +1,11 @@
+.cost {
+  display: flex;
+}
+
+.quantity {
+  font-size: 30px;
+}
+
+.gem {
+  font-size: 30px;
+}
