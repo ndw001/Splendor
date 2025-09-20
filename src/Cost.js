@@ -1,7 +1,7 @@
 import "./Cost.css";
 
 function Cost(props) {
-  console.log("this is props.costs", props.costs);
+  // console.log("this is props.costs", props.costs);
 
   // useEffect
 
