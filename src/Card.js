@@ -25,7 +25,7 @@ function Card({ card }) {
   };
 
   // console.log("props  ", props.card);
-  console.log("HELLO THERE ", points, gem);
+  // console.log("HELLO THERE ", points, gem);
 
   let sampleCost = [
     { quantity: 3, gem: "green" },

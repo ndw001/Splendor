@@ -19,6 +19,7 @@ function Cost(props) {
         return (
           <div className="cost">
             <div className="quantity">{cost.quantity}</div>
+            &nbsp;
             <div className="gem">{tempGemLibrary[cost.gem]}</div>
           </div>
         );
