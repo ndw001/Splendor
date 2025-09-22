@@ -62,7 +62,52 @@ const TierOneDeck = [
       { quantity: 1, gem: "black" },
     ],
   },
-  // 4 cycle - 1/2/2 1 pt
+  // 4th cycle - 1/2/2 1 pt
+  {
+    points: 0,
+    gem: "red",
+    cost: [
+      { quantity: 2, gem: "green" },
+      { quantity: 2, gem: "blue" },
+      { quantity: 1, gem: "black" },
+    ],
+  },
+  {
+    points: 0,
+    gem: "green",
+    cost: [
+      { quantity: 2, gem: "blue" },
+      { quantity: 2, gem: "black" },
+      { quantity: 1, gem: "white" },
+    ],
+  },
+  {
+    points: 0,
+    gem: "blue",
+    cost: [
+      { quantity: 1, gem: "red" },
+      { quantity: 2, gem: "green" },
+      { quantity: 2, gem: "white" },
+    ],
+  },
+  {
+    points: 0,
+    gem: "black",
+    cost: [
+      { quantity: 2, gem: "red" },
+      { quantity: 1, gem: "blue" },
+      { quantity: 2, gem: "white" },
+    ],
+  },
+  {
+    points: 0,
+    gem: "white",
+    cost: [
+      { quantity: 2, gem: "red" },
+      { quantity: 1, gem: "green" },
+      { quantity: 2, gem: "black" },
+    ],
+  },
 ];
 
 export default TierOneDeck;

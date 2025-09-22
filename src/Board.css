@@ -1,4 +1,11 @@
+.AvailableCards {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 .row {
   display: flex;
   justify-content: space-evenly;
+  gap: 1rem;
 }
