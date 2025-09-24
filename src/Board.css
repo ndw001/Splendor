@@ -9,3 +9,22 @@
   justify-content: space-evenly;
   gap: 1rem;
 }
+
+.AvailableCoins {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.coinStack {
+  font-size: 40px;
+}
+
+.PlayerArea {
+  background-color: rgb(34, 235, 34);
+}
+
+.PlayerCoins {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 40px;
+}

@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useRef } from "react";
 import "./Board.css";
 import Card from "./Card";
 import TierOneDeck from "./TierOneDeck";
@@ -7,10 +8,38 @@ import TierThreeDeck from "./TierThreeDeck";
 import shuffleArray from "./helperFunctions";
 
 function Board() {
-  /*
-  background image
+  const [isTakingCoins, setIsTakingCoins] = useState(false);
+  const [heldCoins, setHeldCoins] = useState({
+    red: 0,
+    green: 0,
+    blue: 0,
+    black: 0,
+    white: 0,
+    gold: 0,
+  });
+  const [isTakingCard, setIsTakingCard] = useState(false);
 
-  */
+  const [currentRowOne, setCurrentRowOne] = useState([]);
+  const [currentRowTwo, setCurrentRowTwo] = useState([]);
+  const [currentRowThree, setCurrentRowThree] = useState([]);
+  const [currentAvailableCoins, setCurrentAvailableCoins] = useState({
+    red: 7,
+    green: 7,
+    blue: 7,
+    black: 7,
+    white: 7,
+    gold: 5,
+  });
+
+  const [playerCoins, setPlayerCoins] = useState({
+    red: 0,
+    green: 0,
+    blue: 0,
+    black: 0,
+    white: 0,
+    gold: 0,
+  });
+  const [playerCards, setPlayerCards] = useState([]);
 
   const tempGemLibrary = {
     red: "🔴",
@@ -18,6 +47,7 @@ function Board() {
     blue: "🔵",
     black: "⚫",
     white: "⚪",
+    gold: "🟡",
   };
 
   const sampleBlankCard = {
@@ -36,11 +66,88 @@ function Board() {
   const deckTwo = shuffleArray([...TierTwoDeck]);
   const deckThree = shuffleArray([...TierThreeDeck]);
 
-  let rowOne = deckOne.slice(0, 4);
-  let rowTwo = deckTwo.slice(0, 4);
-  let rowThree = deckThree.slice(0, 4);
+  useEffect(() => {
+    setCurrentRowOne(deckOne.slice(0, 4));
+    setCurrentRowTwo(deckTwo.slice(0, 4));
+    setCurrentRowThree(deckThree.slice(0, 4));
+  }, []);
 
-  // console.log("This is deck One", deckOne);
+  const takeCoin = (gem) => {
+    setIsTakingCoins(true);
+    if (gem === "gold") {
+      console.log("❌ Gold coins can only be taken by reserving a card");
+      return;
+    }
+
+    setHeldCoins((prevHeld) => {
+      const totalTaken = Object.values(prevHeld).reduce((a, b) => a + b, 0);
+      if (totalTaken >= 3) return prevHeld;
+
+      const hasDouble = Object.values(prevHeld).some((count) => count === 2);
+      if (hasDouble && prevHeld[gem] === 0) return prevHeld;
+
+      const differentGemsTaken = Object.values(prevHeld).filter(
+        (c) => c > 0
+      ).length;
+      if (differentGemsTaken > 1 && prevHeld[gem] === 1) return prevHeld;
+
+      if (prevHeld[gem] >= 2) return prevHeld;
+      if (prevHeld[gem] === 1 && currentAvailableCoins[gem] < 4)
+        return prevHeld;
+
+      const newHeld = { ...prevHeld, [gem]: prevHeld[gem] + 1 };
+      const newAvailable = {
+        ...currentAvailableCoins,
+        [gem]: currentAvailableCoins[gem] - 1,
+      };
+
+      setCurrentAvailableCoins(newAvailable);
+
+      return newHeld;
+    });
+  };
+
+  const cancelTakeCoins = () => {
+    setCurrentAvailableCoins((prevAvailable) => {
+      const restored = { ...prevAvailable };
+      for (let gem in heldCoins) {
+        restored[gem] += heldCoins[gem];
+      }
+      return restored;
+    });
+
+    setHeldCoins({
+      red: 0,
+      green: 0,
+      blue: 0,
+      black: 0,
+      white: 0,
+      gold: 0,
+    });
+
+    setIsTakingCoins(false);
+  };
+
+  const confirmTakeCoins = () => {
+    setPlayerCoins((prev) => {
+      const updated = { ...prev };
+      for (let gem in heldCoins) {
+        updated[gem] += heldCoins[gem];
+      }
+      return updated;
+    });
+
+    setHeldCoins({
+      red: 0,
+      green: 0,
+      blue: 0,
+      black: 0,
+      white: 0,
+      gold: 0,
+    });
+
+    setIsTakingCoins(false);
+  };
 
   return (
     <div className="Board">
@@ -51,7 +158,7 @@ function Board() {
           <div className="deck">
             <Card card={sampleBlankCard} />
           </div>
-          {rowThree.map((card) => {
+          {currentRowThree.map((card) => {
             return <Card card={card} />;
           })}
         </div>
@@ -59,7 +166,7 @@ function Board() {
           <div className="deck">
             <Card card={sampleBlankCard} />
           </div>
-          {rowTwo.map((card) => {
+          {currentRowTwo.map((card) => {
             return <Card card={card} />;
           })}
         </div>
@@ -67,13 +174,52 @@ function Board() {
           <div className="deck">
             <Card card={sampleBlankCard} />
           </div>
-          {rowOne.map((card) => {
+          {currentRowOne.map((card) => {
             return <Card card={card} />;
           })}
         </div>
       </div>
-      <div className="AvailableCoins"></div>
-      <div className="PlayerArea"></div>
+      <div className="AvailableCoins">
+        {Object.keys(currentAvailableCoins).map((gem) => {
+          const gemId = `Available${gem}`;
+          return (
+            <div
+              className="coinStack"
+              id={gemId}
+              onClick={(e) => {
+                console.log("CLICKED:", gem);
+
+                takeCoin(gem);
+              }}
+            >
+              {currentAvailableCoins[gem]}
+              {tempGemLibrary[gem]}
+            </div>
+          );
+        })}
+      </div>
+      <div className="PlayerArea">
+        Your Coins and Cards
+        <div className="PlayerCoins">
+          {Object.keys(playerCoins).map((gem) => {
+            const gemId = `Available${gem}`;
+            return (
+              <div className="coinStack" id={gemId}>
+                {playerCoins[gem]}
+                {tempGemLibrary[gem]}
+              </div>
+            );
+          })}
+        </div>
+        <div className="PlayerCards">
+          {isTakingCoins && (
+            <div className="coin-actions">
+              <button onClick={cancelTakeCoins}>Cancel</button>
+              <button onClick={confirmTakeCoins}>Confirm</button>
+            </div>
+          )}
+        </div>
+      </div>
       <div className="OtherPlayerArea"></div>
     </div>
   );
