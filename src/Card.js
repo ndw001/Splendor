@@ -1,7 +1,7 @@
 import "./Card.css";
 import Cost from "./Cost";
 
-function Card({ card }) {
+function Card({ card, onClick }) {
   if (!card) return null;
   const { points, gem, cost } = card;
   const tempGemLibrary = {
@@ -17,7 +17,7 @@ function Card({ card }) {
   ];
 
   return (
-    <div className="Card">
+    <div className="Card" onClick={onClick}>
       <div className="header">
         <div className="Points">{points}</div>
         <div className="Gem">{tempGemLibrary[gem]}</div>

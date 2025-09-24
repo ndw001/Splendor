@@ -1,18 +1,19 @@
 const TierOneDeck = [
   // 1st cycle - efficient
-  { points: 0, gem: "red", cost: [{ quantity: 3, gem: "blue" }] },
-  { points: 0, gem: "blue", cost: [{ quantity: 3, gem: "green" }] },
-  { points: 0, gem: "green", cost: [{ quantity: 3, gem: "black" }] },
-  { points: 0, gem: "black", cost: [{ quantity: 3, gem: "white" }] },
-  { points: 0, gem: "white", cost: [{ quantity: 3, gem: "red" }] },
+  { id: 1, points: 0, gem: "red", cost: [{ quantity: 3, gem: "blue" }] },
+  { id: 2, points: 0, gem: "blue", cost: [{ quantity: 3, gem: "green" }] },
+  { id: 3, points: 0, gem: "green", cost: [{ quantity: 3, gem: "black" }] },
+  { id: 4, points: 0, gem: "black", cost: [{ quantity: 3, gem: "white" }] },
+  { id: 5, points: 0, gem: "white", cost: [{ quantity: 3, gem: "red" }] },
   // 2nd cycle - efficient 1 pt
-  { points: 1, gem: "red", cost: [{ quantity: 4, gem: "white" }] },
-  { points: 1, gem: "blue", cost: [{ quantity: 4, gem: "red" }] },
-  { points: 1, gem: "green", cost: [{ quantity: 4, gem: "blue" }] },
-  { points: 1, gem: "black", cost: [{ quantity: 4, gem: "green" }] },
-  { points: 1, gem: "white", cost: [{ quantity: 4, gem: "black" }] },
+  { id: 6, points: 1, gem: "red", cost: [{ quantity: 4, gem: "white" }] },
+  { id: 7, points: 1, gem: "blue", cost: [{ quantity: 4, gem: "red" }] },
+  { id: 8, points: 1, gem: "green", cost: [{ quantity: 4, gem: "blue" }] },
+  { id: 9, points: 1, gem: "black", cost: [{ quantity: 4, gem: "green" }] },
+  { id: 10, points: 1, gem: "white", cost: [{ quantity: 4, gem: "black" }] },
   // 3rd cycle - one of each
   {
+    id: 11,
     points: 0,
     gem: "red",
     cost: [
@@ -23,6 +24,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 12,
     points: 0,
     gem: "green",
     cost: [
@@ -33,6 +35,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 13,
     points: 0,
     gem: "blue",
     cost: [
@@ -43,6 +46,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 14,
     points: 0,
     gem: "black",
     cost: [
@@ -53,6 +57,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 15,
     points: 0,
     gem: "white",
     cost: [
@@ -64,6 +69,7 @@ const TierOneDeck = [
   },
   // 4th cycle - 1/2/2 1 pt
   {
+    id: 16,
     points: 0,
     gem: "red",
     cost: [
@@ -73,6 +79,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 17,
     points: 0,
     gem: "green",
     cost: [
@@ -82,6 +89,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 18,
     points: 0,
     gem: "blue",
     cost: [
@@ -91,6 +99,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 19,
     points: 0,
     gem: "black",
     cost: [
@@ -100,6 +109,7 @@ const TierOneDeck = [
     ],
   },
   {
+    id: 20,
     points: 0,
     gem: "white",
     cost: [

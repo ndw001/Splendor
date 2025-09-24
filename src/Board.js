@@ -17,7 +17,17 @@ function Board() {
     white: 0,
     gold: 0,
   });
+
+  const heldCoinsText = Object.entries(heldCoins)
+    .filter(([_, count]) => count > 0)
+    .map(([gem, count]) => `${count} ${gem}`);
+
+  const displayHeldCoinsText = isTakingCoins
+    ? `You are holding ${heldCoinsText.join(", ")}`
+    : "";
+
   const [isTakingCard, setIsTakingCard] = useState(false);
+  const [heldCard, setHeldCard] = useState({});
 
   const [currentRowOne, setCurrentRowOne] = useState([]);
   const [currentRowTwo, setCurrentRowTwo] = useState([]);
@@ -81,15 +91,26 @@ function Board() {
 
     setHeldCoins((prevHeld) => {
       const totalTaken = Object.values(prevHeld).reduce((a, b) => a + b, 0);
-      if (totalTaken >= 3) return prevHeld;
+      if (totalTaken >= 3) {
+        console.log("❌ Can't take more than 3 coins");
+        return prevHeld;
+      }
 
       const hasDouble = Object.values(prevHeld).some((count) => count === 2);
-      if (hasDouble && prevHeld[gem] === 0) return prevHeld;
+      if (hasDouble && prevHeld[gem] === 0) {
+        console.log("❌ Can't take a third coin after taking double coins");
+        return prevHeld;
+      }
 
       const differentGemsTaken = Object.values(prevHeld).filter(
         (c) => c > 0
       ).length;
-      if (differentGemsTaken > 1 && prevHeld[gem] === 1) return prevHeld;
+      if (differentGemsTaken > 1 && prevHeld[gem] === 1) {
+        console.log(
+          "❌ Can't take two of the same coin and another color coin"
+        );
+        return prevHeld;
+      }
 
       if (prevHeld[gem] >= 2) return prevHeld;
       if (prevHeld[gem] === 1 && currentAvailableCoins[gem] < 4)
@@ -149,6 +170,53 @@ function Board() {
     setIsTakingCoins(false);
   };
 
+  const takeCard = (cardId) => {
+    const processRow = (row, setRow) => {
+      const card = row.find((c) => c.id === cardId);
+      if (!card) return false;
+
+      let coinsCopy = { ...playerCoins };
+      let goldNeeded = 0;
+
+      for (const { gem, quantity } of card.cost) {
+        if (coinsCopy[gem] >= quantity) {
+          coinsCopy[gem] -= quantity;
+        } else {
+          const shortfall = quantity - coinsCopy[gem];
+          goldNeeded += shortfall;
+          coinsCopy[gem] = 0;
+        }
+      }
+
+      if (goldNeeded > coinsCopy.gold) {
+        console.log("❌ Can't afford card (even with gold)");
+        return true;
+      }
+
+      coinsCopy.gold -= goldNeeded;
+
+      setPlayerCoins(coinsCopy);
+      setPlayerCards((prev) => [...prev, card]);
+
+      setIsTakingCard(false);
+      setHeldCoins({
+        red: 0,
+        green: 0,
+        blue: 0,
+        black: 0,
+        white: 0,
+        gold: 0,
+      });
+
+      setRow((prevRow) => prevRow.filter((c) => c.id !== cardId));
+      return true;
+    };
+
+    if (processRow(currentRowOne, setCurrentRowOne)) return;
+    if (processRow(currentRowTwo, setCurrentRowTwo)) return;
+    if (processRow(currentRowThree, setCurrentRowThree)) return;
+  };
+
   return (
     <div className="Board">
       <div className="Nobles"></div>
@@ -159,7 +227,7 @@ function Board() {
             <Card card={sampleBlankCard} />
           </div>
           {currentRowThree.map((card) => {
-            return <Card card={card} />;
+            return <Card card={card} onClick={() => takeCard(card.id)} />;
           })}
         </div>
         <div className="row" id="row2">
@@ -167,7 +235,7 @@ function Board() {
             <Card card={sampleBlankCard} />
           </div>
           {currentRowTwo.map((card) => {
-            return <Card card={card} />;
+            return <Card card={card} onClick={() => takeCard(card.id)} />;
           })}
         </div>
         <div className="row" id="row1">
@@ -175,7 +243,7 @@ function Board() {
             <Card card={sampleBlankCard} />
           </div>
           {currentRowOne.map((card) => {
-            return <Card card={card} />;
+            return <Card card={card} onClick={() => takeCard(card.id)} />;
           })}
         </div>
       </div>
@@ -187,8 +255,6 @@ function Board() {
               className="coinStack"
               id={gemId}
               onClick={(e) => {
-                console.log("CLICKED:", gem);
-
                 takeCoin(gem);
               }}
             >
@@ -212,6 +278,7 @@ function Board() {
           })}
         </div>
         <div className="PlayerCards">
+          {displayHeldCoinsText}
           {isTakingCoins && (
             <div className="coin-actions">
               <button onClick={cancelTakeCoins}>Cancel</button>
